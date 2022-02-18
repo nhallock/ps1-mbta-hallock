@@ -4,18 +4,47 @@
 
 <script>
 
+// Do not ping website constantly or youll get banned
+// use a test json object to format and debug
+// var testData =  
+
 // Request bus data from MBTA
 async function getBusLocations(){
 	// MBTA real-time data for bus route 1
 	const url = 'https://api-v3.mbta.com/vehicles?filter[route]=1&include=trip';
+
+	// get data from MBTA API
+	var response = await fetch(url);
+	var json = await response.json();
+
+	return json.data;
+	console.log(json);
+
 }
 
 // request data on a timer
 async function run(){
 	// request bus data
+	var buses = await getBusLocations();
+	
+	// loop through buses -get id, lat, lng
+	buses.data.forEach(function(bus){
+		var id = bus.id;
+		var lat = bus.attributes.latitude;
+		var lng = bus.attributes.longitude;
+		console.log(
+			'id: ' + id + ' ' +
+			'lat' + lat + ' ' +
+			'lng' + lng 
+		)
+	});
+	
 
 	// timer
+	setTimeout(run, 15000);
 }
 run();
+
+
 
 </script>
